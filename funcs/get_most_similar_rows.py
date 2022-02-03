@@ -22,13 +22,13 @@ def get_most_similar_rows(cos_sim_df, train):
         for index, row in cos_sim_df.iterrows():
             #print(i,'/',len(cos_sim_df))
             #print(index, row['Id'])
-            print(index)
+            #print(index)
             if any([pd.isnull(cos_sim_df.loc[index, col]) for col in cos_sim_df.columns]):
                 #vector_with_nan = cos_sim_df.iloc[index]
                 vector_with_nan = [cos_sim_df.loc[index, col] for col in cos_sim_df.columns]
                 pos_of_nan = np.where([pd.isnull(x) for x in vector_with_nan])[0]
                 col_of_nan = [cos_sim_df.columns[x] for x in pos_of_nan]
-                print(col_of_nan)
+                #print(col_of_nan)
                 #print(col_of_nan)
                 #if index == 197:
                 #    print('important: ',col_of_nan)
@@ -65,7 +65,7 @@ def smart_fillna(df, cutoff, results, all_numerical):
         #print(indices in list(results.keys()))
         #print(results[indices])
         #try:
-        print(indices in list(results.keys()))
+        #print(indices in list(results.keys()))
         #print(results_indices)
         if str(indices) in list(results.keys()):
             most_similar = [x[0] for x in results[str(indices)] if x[1] >= cutoff]
@@ -76,8 +76,8 @@ def smart_fillna(df, cutoff, results, all_numerical):
             #print('columns to fill:', columns_to_fill)
             for col_list in columns_to_fill: # Don't want to use 'mean' on categorical data
                 for col in col_list:
-                    print(indices, col)
-                    print('before at index',indices,'and column', col,'sample is ',df.loc[indices, col])
+                    #print(indices, col)
+                    #print('before at index',indices,'and column', col,'sample is ',df.loc[indices, col])
                     if not pd.isnull(df.loc[indices, col]):
                         raise ValueError(df.loc[indices, col], 'should be null')
                     subset_test = subset[col]
@@ -87,22 +87,22 @@ def smart_fillna(df, cutoff, results, all_numerical):
                             #print(normal_test_results)
                             if normal_test_results[1] > alpha: #null hypothesis cannot be rejected that distribution is normal. Take mean of gaussian
                                 df.loc[indices, col] = np.nanmean(subset_test)
-                                print('mean')
+                                #print('mean')
                             else:
                                 df.loc[indices, col] = np.nanmedian(subset_test)
-                                print('med')
+                                #print('med')
                         else:
-                            print('less than 8 samples')
+                            #print('less than 8 samples')
                             mean = np.nanmean(subset_test)
                             median = np.nanmedian(subset_test)
-                            print(mean, median)
+                            #print(mean, median)
                             if np.abs((mean-median)/mean)*100 < 10: # Mean and median are close together -- can pick either, will pick mean
                                 df.loc[indices, col] = mean
                             else: # Pick median -- not close together possibly due to outliers
                                 df.loc[indices, col] = median
                     else:
-                        print('not in all numerical')
-                        print('set: ', set(subset_test))
+                        #print('not in all numerical')
+                        #print('set: ', set(subset_test))
                         df.loc[indices, col] = np.nanmedian(subset_test)
-                    print('after at index',indices,'and column', col,'sample is ',df.loc[indices, col])
+                    #print('after at index',indices,'and column', col,'sample is ',df.loc[indices, col])
     return df
